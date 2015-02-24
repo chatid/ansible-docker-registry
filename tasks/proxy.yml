@@ -1,0 +1,36 @@
+---
+- name: proxy | install passlib
+  pip: name=passlib state=present
+
+- name: proxy | render root password
+  htpasswd: >
+    path=/etc/nginx/docker-registry.passwd
+    name=root password={{ docker_registry_root_password }}
+    owner=root group=www-data mode=0640
+
+- name: proxy | copy SSL cert
+  copy: >
+    src={{ docker_registry_proxy_ssl_cert_src }} dest={{ docker_registry_proxy_ssl_cert_dest }}
+    owner=root group={{ docker_registry_proxy_user }} mode=640
+  when: docker_registry_proxy_ssl
+
+- name: proxy | copy SSL key
+  copy: >
+    src={{ docker_registry_proxy_ssl_key_src }} dest={{ docker_registry_proxy_ssl_key_dest }}
+    owner=root group={{ docker_registry_proxy_user }} mode=640
+  when: docker_registry_proxy_ssl
+
+- name: proxy | render consul-template templates
+  template: src=docker-registry-nginx.ctmpl dest={{ consul_template_templates_dir }}/docker-registry-nginx.ctmpl
+  notify: restart consul-template
+  when: docker_registry_proxy_consul_aware|bool
+
+- name: proxy | render consul-template config
+  template: src=docker-registry-nginx.hcl dest={{ consul_template_conf_dir }}/docker-registry-nginx.hcl
+  notify: restart consul-template
+  when: docker_registry_proxy_consul_aware|bool
+
+- name: proxy | render Nginx config
+  template: src=docker-registry-nginx.ctmpl dest=/etc/nginx/sites-enabled/docker-registry.conf
+  notify: reload nginx
+  when: not docker_registry_proxy_consul_aware|bool

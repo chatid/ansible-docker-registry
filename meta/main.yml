@@ -1,0 +1,32 @@
+---
+galaxy_info:
+  author: Matt Wright
+  description: Installs and configures a Docker registry
+  company: ChatID Inc.
+  license: MIT
+  platforms:
+    - name: Ubuntu
+      versions:
+        - trusty
+  categories:
+    - docker
+    - containers
+    - packaging
+
+dependencies:
+  - role: Stouts.python
+    python_versions: [2.7]
+    tags: [python]
+
+  - role: chatid.docker
+    tags: [docker]
+
+  - role: chatid.consul-template
+    tags: [consul, consul-template]
+    when: docker_registry_proxy_consul_aware|bool
+
+  - role: jdauphant.nginx
+    nginx_remove_sites: [default]
+    nginx_sites: {}
+    when: docker_registry_proxy|bool
+    tags: [nginx]

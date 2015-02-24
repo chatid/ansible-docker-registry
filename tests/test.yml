@@ -1,0 +1,19 @@
+---
+# Plain old install
+- hosts: all
+  sudo: true
+
+  roles:
+    - role: chatid.docker-registry
+      docker_registry_proxy: yes
+      docker_registry_root_password: password
+
+# Consul aware
+- hosts: all
+  sudo: true
+
+  roles:
+    - role: chatid.docker-registry
+      docker_registry_proxy: yes
+      docker_registry_proxy_consul_aware: yes
+      docker_registry_root_password: password

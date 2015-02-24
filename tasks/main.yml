@@ -1,0 +1,8 @@
+---
+# tasks file for chatid.docker-registry
+- include: install.yml
+  tags: [install]
+
+- include: proxy.yml
+  when: docker_registry_proxy|bool
+  tags: [proxy]

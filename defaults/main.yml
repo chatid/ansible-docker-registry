@@ -1,0 +1,25 @@
+---
+# defaults file for chatid.docker-registry
+# docker_registry_root_password: None
+docker_registry_service_name: docker
+docker_registry_cidfile: /var/run/docker-registry.cid
+docker_registry_port: ''
+docker_registry_docker_image: registry
+docker_registry_settings_flavor: s3
+docker_registry_storage_path: /var/lib/docker-registry
+docker_registry_s3_bucket: chatid-docker-registry
+docker_registry_gunicorn_workers: 4
+docker_registry_loglevel: error
+docker_registry_proxy: false
+docker_registry_proxy_user: www-data
+docker_registry_proxy_ssl: false
+docker_registry_proxy_ssl_port: 443
+docker_registry_proxy_ssl_cert_src: None
+docker_registry_proxy_ssl_cert_dest: "{{ docker_registry_storage_path }}/docker-registry.crt"
+docker_registry_proxy_ssl_key_src: None
+docker_registry_proxy_ssl_key_dest: "{{ docker_registry_storage_path }}/docker-registry.key"
+docker_registry_proxy_host: localhost
+docker_registry_proxy_port: 80
+docker_registry_proxy_error_log: /var/log/nginx/docker-registry.error
+docker_registry_proxy_access_log: /var/log/nginx/docker-registry.access
+docker_registry_proxy_consul_aware: no
