@@ -1,8 +1,8 @@
 ---
-- src: git+git@github.com:chatid-ops/chatid.docker.git
+- src: git+git@github.com:chatid/ansible-docker.git
   version: master
 
-- src: git+git@github.com:chatid-ops/chatid.consul-template.git
+- src: git+git@github.com:chatid/ansible-consul-template.git
   version: master
 
 - src: git+git@github.com:jdauphant/ansible-role-nginx.git
