@@ -15,15 +15,17 @@
 
 - name: install | inspect container
   command: docker inspect {{ cat_result.stdout.strip() }}
-  register: docker_inspect_result
+  register: inspect_result
   changed_when: False
-  when: cat_result.rc == 0
+  when: >
+    cat_result.rc > 0  or
+    (inspect_result.rc == 0 and inspect_result.stdout.find('"Running": false') > -1)
 
-# If the port is pinned, we need to stop the previous contianer
-- name: install | stop previous container
-  shell: docker {{ item }} {{ cat_result.stdout.strip() }}
-  with_items: [stop, rm]
-  when: docker_registry_port != '' and docker_inspect_result is defined and docker_inspect_result.rc == 0
+- name: install | remove cidfile
+  file: path={{ docker_registry_cidfile }} state=absent
+  when: >
+    cat_result.rc > 0  or
+    (inspect_result.rc == 0 and inspect_result.stdout.find('"Running": false') > -1)
 
 - name: install | run registry container
   shell: >
@@ -42,10 +44,8 @@
     -v {{ docker_registry_storage_path }}:/registry \
     {{ docker_registry_docker_image }}
   when: >
-    docker_pull_result.changed or
-    docker_inspect_result is not defined or
-    (docker_inspect_result is defined and docker_inspect_result.rc != 0) or
-    (docker_inspect_result is defined and '"Running": false' in docker_inspect_result.stdout)
+    cat_result.rc > 0  or
+    (inspect_result.rc == 0 and inspect_result.stdout.find('"Running": false') > -1)
   register: docker_run_result
 
 # If the port is pinned, we need to get the port into the facts
@@ -63,7 +63,7 @@
 - name: install | stop previous docker_registry container
   shell: docker {{ item }} {{ cat_result.stdout.strip() }}
   with_items: [stop, rm]
-  when: docker_registry_port == '' and docker_inspect_result is defined and docker_inspect_result.rc == 0
+  when: docker_registry_port == '' and inspect_result is defined and inspect_result.rc == 0
 
 - name: install | wait for server to come up
   wait_for: host=0.0.0.0 port={{ docker_registry_port }}

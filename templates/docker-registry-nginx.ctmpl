@@ -26,8 +26,8 @@ server {
 
 {% if docker_registry_proxy_ssl %}
     ssl                  on;
-    ssl_certificate      {{ docker_registry_proxy_ssl_cert_path }};
-    ssl_certificate_key  {{ docker_registry_proxy_ssl_key_path }};
+    ssl_certificate      {{ docker_registry_proxy_ssl_cert_dest }};
+    ssl_certificate_key  {{ docker_registry_proxy_ssl_key_dest }};
     ssl_session_cache    shared:SSL:10m;
     ssl_session_timeout  10m;
 
