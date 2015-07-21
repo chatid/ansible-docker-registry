@@ -17,9 +17,7 @@
   command: docker inspect {{ cat_result.stdout.strip() }}
   register: inspect_result
   changed_when: False
-  when: >
-    cat_result.rc > 0  or
-    (inspect_result.rc == 0 and inspect_result.stdout.find('"Running": false') > -1)
+  when: cat_result.rc == 0  or
 
 - name: install | remove cidfile
   file: path={{ docker_registry_cidfile }} state=absent
