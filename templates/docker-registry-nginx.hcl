@@ -1,5 +1,5 @@
 template {
   source = "{{ consul_template_templates_dir }}/docker-registry-nginx.ctmpl"
-  destination  = "/etc/nginx/sites-enabled/docker-registry.conf"
+  destination  = "{{ docker_registry_proxy_conf_dest }}"
   command = "nginx -s reload"
 }

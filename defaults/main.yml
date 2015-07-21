@@ -22,4 +22,5 @@ docker_registry_proxy_host: localhost
 docker_registry_proxy_port: 80
 docker_registry_proxy_error_log: /var/log/nginx/docker-registry.error
 docker_registry_proxy_access_log: /var/log/nginx/docker-registry.access
+docker_registry_proxy_conf_dest: /etc/nginx/sites-enabled/docker-registry.conf
 docker_registry_proxy_consul_aware: no

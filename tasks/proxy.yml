@@ -31,6 +31,6 @@
   when: docker_registry_proxy_consul_aware|bool
 
 - name: proxy | render Nginx config
-  template: src=docker-registry-nginx.ctmpl dest=/etc/nginx/sites-enabled/docker-registry.conf
+  template: src=docker-registry-nginx.ctmpl dest={{ docker_registry_proxy_conf_dest }}
   notify: reload nginx
   when: not docker_registry_proxy_consul_aware|bool

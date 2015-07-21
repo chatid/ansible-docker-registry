@@ -16,6 +16,7 @@
 - name: install | inspect container
   command: docker inspect {{ cat_result.stdout.strip() }}
   register: inspect_result
+  ignore_errors: yes
   changed_when: False
   when: cat_result.rc == 0
 
@@ -36,8 +37,7 @@
     -v {{ docker_registry_storage_path }}:/registry \
     {{ docker_registry_docker_image }}
   when: >
-    cat_result.rc > 0  or
-    (inspect_result.rc == 0 and inspect_result.stdout.find('"Running": false') > -1)
+    cat_result.rc > 0 or inspect_result.rc > 0 or inspect_result.stdout.find('"Running": false') > -1
   register: docker_run_result
 
 # If the port is pinned, we need to get the port into the facts
