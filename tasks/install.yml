@@ -19,12 +19,6 @@
   changed_when: False
   when: cat_result.rc == 0
 
-- name: install | remove cidfile
-  file: path={{ docker_registry_cidfile }} state=absent
-  when: >
-    cat_result.rc > 0  or
-    (inspect_result.rc == 0 and inspect_result.stdout.find('"Running": false') > -1)
-
 - name: install | run registry container
   shell: >
     rm -f {{ docker_registry_cidfile }} &&
