@@ -50,12 +50,5 @@
   set_fact: { docker_registry_port: "{{ docker_port_result.stdout.split(':')[1] }}" }
   when: docker_port_result is defined and docker_port_result.rc == 0
 
-# If the port is not pinned we started another container and we should stop and remove
-# the existing ones
-- name: install | stop previous docker_registry container
-  shell: docker {{ item }} {{ cat_result.stdout.strip() }}
-  with_items: [stop, rm]
-  when: docker_registry_port == '' and inspect_result is defined and inspect_result.rc == 0
-
 - name: install | wait for server to come up
   wait_for: host=0.0.0.0 port={{ docker_registry_port }}
