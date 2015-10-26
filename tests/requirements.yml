@@ -1,0 +1,5 @@
+---
+- src: git+git@github.com:chatid/ansible-docker.git
+  version: remotes/origin/develop
+  path: roles
+  name: chatid.docker

@@ -1,0 +1,8 @@
+---
+- name: registry | run registry container
+  docker:
+    name: registry
+    image: registry:2
+    ports:
+      - "5000:5000"
+    state: started
