@@ -1,8 +1,45 @@
 ---
+- name: registry | ensure /etc/docker/registry exists
+  file:
+    path: /etc/docker/registry
+    state: directory
+
+- name: registry | ensure /var/lib/registry exists
+  file:
+    path: /var/lib/registry
+    state: directory
+  when: not docker_registry_s3_backend
+
+- name: registry | generate registry configuration
+  template:
+    src: config.yml
+    dest: /etc/docker/registry/config.yml
+    owner: root
+    group: root
+    mode: 0644
+  register: config
+
+- name: registry | copy SSL certificate and key
+  copy:
+    src: "{{ item }}"
+    dest: "/etc/docker/registry/{{ item }}"
+    owner: root
+    group: root
+    mode: 0640
+  with_items:
+    - docker-registry.crt
+    - docker-registry.key
+  when: docker_registry_tls
+  register: certs
+
 - name: registry | run registry container
   docker:
     name: registry
     image: registry:2
     ports:
       - "5000:5000"
-    state: started
+    restart_policy: always
+    volumes:
+      - "/var/lib/registry:/var/lib/registry"
+      - "/etc/docker/registry:/etc/docker/registry"
+    state: "{{ 'restarted' if config.changed or certs.changed else 'started' }}"

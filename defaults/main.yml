@@ -1,0 +1,9 @@
+---
+docker_registry_s3_backend: no
+docker_registry_s3_bucket: docker-registry
+
+docker_registry_tls: no
+docker_registry_auth_realm: chatid-docker-registry
+
+docker_registry_http_host: hub.chatid.com
+docker_registry_http_secret: 7b846d37b481f1ae1f31065f5f5f8186ec4dde1b
