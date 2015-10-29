@@ -1,0 +1,54 @@
+---
+- name: proxy | install passlib
+  pip:
+    name: passlib
+    state: present
+
+- name: proxy | render root password
+  htpasswd:
+    path: "{{ docker_registry_htpasswd }}"
+    name: "{{ docker_registry_root_username }}"
+    password: "{{ docker_registry_root_password }}"
+    crypt_scheme: bcrypt
+    state: present
+  register: htpasswd
+
+- name: proxy | ensure SSL cert destination directory
+  file:
+    path: "{{ item | dirname }}"
+    state: directory
+  with_items:
+    - "{{ docker_registry_ssl_crt_dest }}"
+    - "{{ docker_registry_ssl_key_dest }}"
+
+- name: proxy | copy SSL cert and key
+  copy:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+  with_items:
+    - { src: "{{ docker_registry_ssl_crt_src }}", dest: "{{ docker_registry_ssl_crt_dest }}" }
+    - { src: "{{ docker_registry_ssl_key_src }}", dest: "{{ docker_registry_ssl_key_dest }}" }
+  register: certs
+
+- name: proxy | render nginx config
+  template:
+    src: "{{ docker_registry_nginx_conf_src }}"
+    dest: "{{ docker_registry_nginx_conf_dest }}"
+  register: config
+
+- name: registry | run nginx container
+  docker:
+    name: "{{ docker_registry_nginx_container_name }}"
+    image: "{{ docker_registry_nginx_container_image }}"
+    links:
+      - "{{ docker_registry_container_name }}:{{ docker_registry_container_name }}"
+    ports:
+      - "{{ docker_registry_nginx_ssl_port }}:{{ docker_registry_nginx_ssl_port }}"
+      - "{{ docker_registry_nginx_http_port }}:{{ docker_registry_nginx_http_port }}"
+    restart_policy: "{{ docker_registry_nginx_container_restart_policy }}"
+    volumes:
+      - "{{ docker_registry_htpasswd }}:{{ docker_registry_htpasswd }}"
+      - "{{ docker_registry_ssl_crt_dest }}:{{ docker_registry_ssl_crt_dest }}"
+      - "{{ docker_registry_ssl_key_dest }}:{{ docker_registry_ssl_key_dest }}"
+      - "{{ docker_registry_nginx_conf_dest }}:/etc/nginx/nginx.conf"
+    state: "{{ 'restarted' if htpasswd.changed or certs.changed or config.changed else 'started' }}"

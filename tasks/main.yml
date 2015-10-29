@@ -1,3 +1,6 @@
 ---
 - include: registry.yml
   tags: registry
+
+- include: proxy.yml
+  tags: proxy

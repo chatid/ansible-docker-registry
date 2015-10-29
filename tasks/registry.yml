@@ -1,45 +1,27 @@
 ---
-- name: registry | ensure /etc/docker/registry exists
+- name: registry | ensure config destination directory exists
   file:
-    path: /etc/docker/registry
+    path: "{{ docker_registry_config_dest | dirname }}"
     state: directory
-
-- name: registry | ensure /var/lib/registry exists
-  file:
-    path: /var/lib/registry
-    state: directory
-  when: not docker_registry_s3_backend
 
 - name: registry | generate registry configuration
   template:
-    src: config.yml
-    dest: /etc/docker/registry/config.yml
-    owner: root
-    group: root
-    mode: 0644
+    src: "{{ docker_registry_config_src }}"
+    dest: "{{ docker_registry_config_dest }}"
   register: config
 
-- name: registry | copy SSL certificate and key
-  copy:
-    src: "{{ item }}"
-    dest: "/etc/docker/registry/{{ item }}"
-    owner: root
-    group: root
-    mode: 0640
-  with_items:
-    - docker-registry.crt
-    - docker-registry.key
-  when: docker_registry_tls
-  register: certs
+- name: registry | ensure registry root directory exists
+  file:
+    path: "{{ docker_registry_filesystem_root }}"
+    state: directory
+  when: not docker_registry_s3_backend
 
 - name: registry | run registry container
   docker:
-    name: registry
-    image: registry:2
-    ports:
-      - "5000:5000"
-    restart_policy: always
+    name: "{{ docker_registry_container_name }}"
+    image: "{{ docker_registry_container_image }}"
+    restart_policy: "{{ docker_registry_container_restart_policy }}"
     volumes:
-      - "/var/lib/registry:/var/lib/registry"
-      - "/etc/docker/registry:/etc/docker/registry"
-    state: "{{ 'restarted' if config.changed or certs.changed else 'started' }}"
+      - "{{ docker_registry_filesystem_root }}:{{ docker_registry_filesystem_root }}"
+      - "{{ docker_registry_config_dest }}:{{ docker_registry_config_dest }}"
+    state: "{{ 'restarted' if config.changed else 'started' }}"

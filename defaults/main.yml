@@ -1,9 +1,47 @@
 ---
+docker_registry_config_src: config.yml
+docker_registry_config_dest: /etc/docker/registry/config.yml
+
+docker_registry_container_name: registry
+docker_registry_container_image: registry:2
+docker_registry_container_restart_policy: always
+
+docker_registry_log_level: debug
+docker_registry_log_formatter: text
+
+docker_registry_delete_enabled: yes
+docker_registry_cache_blobdescriptor: inmemory
+
 docker_registry_s3_backend: no
+docker_registry_s3_region: us-east-1
 docker_registry_s3_bucket: docker-registry
+docker_registry_s3_encrypt: yes
+docker_registry_s3_secure: yes
+docker_registry_s3_v4auth: yes
+docker_registry_s3_chunksize: 5242880
 
-docker_registry_tls: no
-docker_registry_auth_realm: chatid-docker-registry
+docker_registry_filesystem_root: /var/lib/registry
 
-docker_registry_http_host: hub.chatid.com
-docker_registry_http_secret: 7b846d37b481f1ae1f31065f5f5f8186ec4dde1b
+docker_registry_listen_addr: 0.0.0.0
+docker_registry_listen_port: 5000
+
+docker_registry_http_port: 443
+docker_registry_http_secret: 2c02f1ead4bb3438eabaaefb31546a6753a45b72
+
+docker_registry_redis_addr: 127.0.0.1
+docker_registry_redis_port: 6379
+
+docker_registry_htpasswd: /etc/docker/registry/htpasswd
+
+docker_registry_ssl_crt_dest: /etc/docker/registry/docker-registry.crt
+docker_registry_ssl_key_dest: /etc/docker/registry/docker-registry.key
+
+docker_registry_nginx_conf_src: nginx.conf
+docker_registry_nginx_conf_dest: /etc/docker/registry/nginx.conf
+
+docker_registry_nginx_container_name: nginx
+docker_registry_nginx_container_image: nginx
+docker_registry_nginx_container_restart_policy: always
+
+docker_registry_nginx_ssl_port: 443
+docker_registry_nginx_http_port: 80
