@@ -15,6 +15,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # Forward the registry port
   config.vm.network "forwarded_port", guest:443, host:4443
   config.vm.network "forwarded_port", guest:80, host:8080
+  config.vm.network "forwarded_port", guest:8080, host:8888
 
   config.vm.define 'machine1' do |machine|
     machine.vm.hostname = 'machine1'

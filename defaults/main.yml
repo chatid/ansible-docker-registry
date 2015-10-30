@@ -25,6 +25,13 @@ docker_registry_filesystem_root: /var/lib/registry
 docker_registry_listen_addr: 0.0.0.0
 docker_registry_listen_port: 5000
 
+docker_registry_debug_addr: 0.0.0.0
+docker_registry_debug_port: 5001
+
+docker_registry_healthcheck_enabled: yes
+docker_registry_healthcheck_interval: 60s
+docker_registry_healthcheck_threshold: 5
+
 docker_registry_http_port: 443
 docker_registry_http_secret: 2c02f1ead4bb3438eabaaefb31546a6753a45b72
 
@@ -46,3 +53,4 @@ docker_registry_nginx_container_restart_policy: always
 
 docker_registry_nginx_ssl_port: 443
 docker_registry_nginx_http_port: 80
+docker_registry_nginx_debug_port: 8080

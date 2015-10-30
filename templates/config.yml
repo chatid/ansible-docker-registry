@@ -26,6 +26,14 @@ http:
   addr: "{{ docker_registry_listen_addr }}:{{ docker_registry_listen_port }}"
   host: "https://{{ docker_registry_http_host }}:{{ docker_registry_http_port }}"
   secret: "{{ docker_registry_http_secret }}"
+  debug:
+    addr: "{{ docker_registry_debug_addr }}:{{ docker_registry_debug_port }}"
+
+health:
+  storagedriver:
+    enabled: "{{ docker_registry_healthcheck_enabled }}"
+    interval: "{{ docker_registry_healthcheck_interval }}"
+    threshold: "{{ docker_registry_healthcheck_threshold }}"
 
 redis:
   addr: "{{ docker_registry_redis_addr }}:{{ docker_registry_redis_port }}"

@@ -43,9 +43,14 @@
     image: "{{ docker_registry_nginx_container_image }}"
     links:
       - "{{ docker_registry_container_name }}:{{ docker_registry_container_name }}"
+    expose:
+      - "{{ docker_registry_nginx_ssl_port }}"
+      - "{{ docker_registry_nginx_http_port }}"
+      - "{{ docker_registry_nginx_debug_port }}"
     ports:
       - "{{ docker_registry_nginx_ssl_port }}:{{ docker_registry_nginx_ssl_port }}"
       - "{{ docker_registry_nginx_http_port }}:{{ docker_registry_nginx_http_port }}"
+      - "{{ docker_registry_nginx_debug_port }}:{{ docker_registry_nginx_debug_port }}"
     restart_policy: "{{ docker_registry_nginx_container_restart_policy }}"
     volumes:
       - "{{ docker_registry_htpasswd }}:{{ docker_registry_htpasswd }}"

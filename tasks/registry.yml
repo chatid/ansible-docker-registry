@@ -21,6 +21,9 @@
     name: "{{ docker_registry_container_name }}"
     image: "{{ docker_registry_container_image }}"
     restart_policy: "{{ docker_registry_container_restart_policy }}"
+    expose:
+      - "{{ docker_registry_listen_port }}"
+      - "{{ docker_registry_debug_port }}"
     volumes:
       - "{{ docker_registry_filesystem_root }}:{{ docker_registry_filesystem_root }}"
       - "{{ docker_registry_config_dest }}:{{ docker_registry_config_dest }}"
