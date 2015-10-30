@@ -5,7 +5,8 @@
   roles:
   - role: '../..'
     docker_registry_http_host: localhost
-    docker_registry_root_username: admin
-    docker_registry_root_password: password
+    docker_registry_htpasswd_entries:
+      - { user: root, pass: password }
+      - { user: dev, pass: password }
     docker_registry_ssl_crt_src: secrets/test.crt
     docker_registry_ssl_key_src: secrets/test.key

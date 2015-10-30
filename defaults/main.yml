@@ -32,6 +32,7 @@ docker_registry_redis_addr: 127.0.0.1
 docker_registry_redis_port: 6379
 
 docker_registry_htpasswd: /etc/docker/registry/htpasswd
+docker_registry_htpasswd_entries: []
 
 docker_registry_ssl_crt_dest: /etc/docker/registry/docker-registry.crt
 docker_registry_ssl_key_dest: /etc/docker/registry/docker-registry.key

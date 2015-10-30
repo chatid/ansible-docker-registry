@@ -4,14 +4,15 @@
     name: passlib
     state: present
 
-- name: proxy | render root password
+- name: proxy | render login credentials
   htpasswd:
     path: "{{ docker_registry_htpasswd }}"
-    name: "{{ docker_registry_root_username }}"
-    password: "{{ docker_registry_root_password }}"
-    crypt_scheme: bcrypt
+    name: "{{ item.user }}"
+    password: "{{ item.pass }}"
     state: present
   register: htpasswd
+  with_items:
+    - "{{ docker_registry_htpasswd_entries }}"
 
 - name: proxy | ensure SSL cert destination directory
   file:
@@ -50,5 +51,5 @@
       - "{{ docker_registry_htpasswd }}:{{ docker_registry_htpasswd }}"
       - "{{ docker_registry_ssl_crt_dest }}:{{ docker_registry_ssl_crt_dest }}"
       - "{{ docker_registry_ssl_key_dest }}:{{ docker_registry_ssl_key_dest }}"
-      - "{{ docker_registry_nginx_conf_dest }}:/etc/nginx/nginx.conf"
+      - "{{ docker_registry_nginx_conf_dest }}:/etc/nginx/conf.d/default.conf"
     state: "{{ 'restarted' if htpasswd.changed or certs.changed or config.changed else 'started' }}"
