@@ -6,17 +6,17 @@ log:
 
 storage:
   delete:
-    enabled: "{{ docker_registry_delete_enabled }}"
+    enabled: {{ docker_registry_delete_enabled | bool | to_json }}
   cache:
     blobdescriptor: "{{ docker_registry_cache_blobdescriptor }}"
 {% if docker_registry_s3_backend %}
   s3:
     region: "{{ docker_registry_s3_region }}"
     bucket: "{{ docker_registry_s3_bucket }}"
-    encrypt: "{{ docker_registry_s3_encrypt }}"
-    secure: "{{ docker_registry_s3_secure }}"
-    v4auth: "{{ docker_registry_s3_v4auth }}"
-    chunksize: "{{ docker_registry_s3_chunksize }}"
+    encrypt: {{ docker_registry_s3_encrypt | bool | to_json }}
+    secure: {{ docker_registry_s3_secure | bool | to_json }}
+    v4auth: {{ docker_registry_s3_v4auth | bool | to_json }}
+    chunksize: {{ docker_registry_s3_chunksize }}
 {% else %}
   filesystem:
     rootdirectory: "{{ docker_registry_filesystem_root }}"
@@ -31,9 +31,9 @@ http:
 
 health:
   storagedriver:
-    enabled: "{{ docker_registry_healthcheck_enabled }}"
+    enabled: {{ docker_registry_healthcheck_enabled | bool | to_json }}
     interval: "{{ docker_registry_healthcheck_interval }}"
-    threshold: "{{ docker_registry_healthcheck_threshold }}"
+    threshold: {{ docker_registry_healthcheck_threshold }}
 
 redis:
   addr: "{{ docker_registry_redis_addr }}:{{ docker_registry_redis_port }}"
