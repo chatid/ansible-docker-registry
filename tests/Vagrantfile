@@ -1,6 +1,10 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
+if (ARGV & %w(up provision)).any?
+  exit 1 unless system('ansible-galaxy install -f -r requirements.yml -p ./roles')
+end
+
 # Vagrantfile API/syntax version. Don't touch unless you know what you're doing!
 VAGRANTFILE_API_VERSION = "2"
 
@@ -22,6 +26,9 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     machine.vm.provision "ansible" do |ansible|
       ansible.verbose = true
       ansible.playbook = "test.yml"
+      ansible.extra_vars = {
+          role_name: Dir.pwd.split('/')[-2]
+        }
     end
   end
 end

@@ -3,7 +3,7 @@
   sudo: yes
 
   roles:
-  - role: '../..'
+  - role: "{{ role_name }}"
     docker_registry_http_host: localhost
     docker_registry_htpasswd_entries:
       - { user: root, pass: password }
