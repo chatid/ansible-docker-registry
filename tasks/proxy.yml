@@ -22,6 +22,9 @@
     - "{{ docker_registry_ssl_crt_dest }}"
     - "{{ docker_registry_ssl_key_dest }}"
 
+- assert: { that: docker_registry_ssl_crt_src is defined }
+- assert: { that: docker_registry_ssl_key_src is defined }
+
 - name: proxy | copy SSL cert and key
   copy:
     src: "{{ item.src }}"
