@@ -27,4 +27,6 @@
     volumes:
       - "{{ docker_registry_filesystem_root }}:{{ docker_registry_filesystem_root }}"
       - "{{ docker_registry_config_dest }}:{{ docker_registry_config_dest }}"
+    log_driver: '{{ docker_registry_log_driver }}'
+    log_opt: '{{ docker_registry_log_driver_opt }}'
     state: "{{ 'restarted' if config.changed else 'started' }}"

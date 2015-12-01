@@ -60,4 +60,6 @@
       - "{{ docker_registry_ssl_crt_dest }}:{{ docker_registry_ssl_crt_dest }}"
       - "{{ docker_registry_ssl_key_dest }}:{{ docker_registry_ssl_key_dest }}"
       - "{{ docker_registry_nginx_conf_dest }}:/etc/nginx/conf.d/default.conf"
+    log_driver: '{{ docker_registry_nginx_log_driver }}'
+    log_opt: '{{ docker_registry_nginx_log_driver_opt }}'
     state: "{{ 'restarted' if htpasswd.changed or certs.changed or config.changed else 'started' }}"

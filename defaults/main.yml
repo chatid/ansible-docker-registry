@@ -8,7 +8,10 @@ docker_registry_container_restart_policy: always
 
 docker_registry_log_level: debug
 docker_registry_log_formatter: text
-
+docker_registry_log_driver: json-file
+docker_registry_log_driver_opt:
+  max-size: '100m'
+  max-file: '5'
 docker_registry_delete_enabled: yes
 docker_registry_cache_blobdescriptor: inmemory
 
@@ -54,3 +57,8 @@ docker_registry_nginx_container_restart_policy: always
 docker_registry_nginx_ssl_port: 443
 docker_registry_nginx_http_port: 80
 docker_registry_nginx_debug_port: 8080
+
+docker_registry_nginx_log_driver: json-file
+docker_registry_nginx_log_driver_opt:
+  max-size: '100m'
+  max-file: '5'
